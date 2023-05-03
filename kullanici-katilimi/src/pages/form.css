@@ -1,0 +1,69 @@
+body {
+    background-image: linear-gradient(to bottom right, #e66465, #9198e5);
+    animation: color-shift 30s linear infinite;
+  }
+  
+  @keyframes color-shift {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+  
+  
+.form label{
+    display: block;
+    padding-top: 15px; 
+    padding-left: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.form input{
+    margin: 0px 10px;
+    background-color: #ffffff60;
+    color: rgba(0, 0, 0);
+    font-weight: bold;
+}
+
+
+.error {
+    color: red;
+  }
+  #en-dıs{
+  }
+  .ortalama{
+    flex-direction: column;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .form{
+    display: block;
+    width: 300px;
+
+  }
+  .idiv{
+    justify-content: center;
+
+  }
+.icdiv{
+    text-align: center;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+.icdiv input{
+    width: 90%;
+}
+.buttton{
+    display: flex;
+      justify-content: center;
+     margin: 10px;
+    }
