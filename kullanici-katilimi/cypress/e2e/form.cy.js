@@ -1,0 +1,21 @@
+describe('İlk Test', function () {
+  it('Test 1 - Form Boş iken hataları düzgün veriyor mu ?', function() {
+     cy.visit('http://localhost:3000/')
+     cy.wait(500)
+     cy.get('.btn').click()
+     cy.get(':nth-child(1) > .invalid-feedback').should('have.text', 'İsim girmediniz')
+     cy.get(':nth-child(2) > .invalid-feedback').should('have.text', 'Mail girmediniz')
+     cy.get(':nth-child(3) > .invalid-feedback').should('have.text', 'Password is required')
+  })
+  it('Test 2 - Form Verileri Düzgün bir şekilde gönderiyor mu ?', function() {
+    cy.visit('http://localhost:3000/')
+    cy.wait(500)
+    cy.get('#name').type('Yusuf Çolak')
+    cy.get('#email').type('yusuf@gmail.com')
+    cy.get('#password').type('12345678')
+    cy.get('.btn').click()
+    cy.wait(500)
+    cy.get('tbody > tr > :nth-child(2)').should('have.text', 'Yusuf Çolak')
+    cy.get('tbody > tr > :nth-child(3)').should('have.text', 'yusuf@gmail.com')
+ })
+})
