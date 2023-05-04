@@ -1,104 +1,86 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
 import axios from "axios";
 import { Button, Form, Table } from "react-bootstrap";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./form.css";
+import * as yup from "yup";
 
+const validationSchema = yup.object({
+  name: yup.string().required("İsim girmediniz").min(5, "En az 5 karakter olmalı."),
+  email: yup.string().required("Mail girmediniz").email("Mail hatalı girdiniz."),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password is too short"),
+});
 const FormPage = () => {
   const [users, setUsers] = useState([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (name.length < 3) {
-      setNameError("Name should be at least 3 characters long.");
-      return;
-    }
-    if (!email.includes("@")) {
-      setEmailError("Please enter a valid email address.");
-      return;
-    }
-    if (password.length < 6) {
-      setPasswordError("Password should be at least 6 characters long.");
-      return;
-    }
-    try {
-      const response = await axios.post("https://reqres.in/api/users", {
-        name,
-        email,
-        password,
-      });
-      const newUser = response.data;
-      setUsers([...users, newUser]);
-      console.log(response.data);
-      setName("");
-      setEmail("");
-      setPassword("");
-      setNameError("");
-      setEmailError("");
-      setPasswordError("");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("https://reqres.in/api/users", values);
+        const newUser = response.data;
+        setUsers([...users, newUser]);
+        formik.resetForm();
+      } catch (error) {
+        console.error(error);
+      }
+    }, 
+  });
   return (
     <>
       <div id="en-dıs">
         <div className="ortalama">
-          <Form onSubmit={handleSubmit} className="form">
+          <Form onSubmit={formik.handleSubmit} className="form">
             <Form.Group controlId="name">
               <Form.Label>Name and Surname:</Form.Label>
               <Form.Control
                 type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                {...formik.getFieldProps("name")}
                 placeholder="Enter your name and surname"
-                isInvalid={nameError}
+                isInvalid={formik.touched.name && formik.errors.name}
               />
               <Form.Control.Feedback type="invalid">
-                {nameError}
+                {formik.errors.name}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="email">
               <Form.Label>Email:</Form.Label>
               <Form.Control
                 type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                {...formik.getFieldProps("email")}
                 placeholder="Enter your email"
-                isInvalid={emailError}
+                isInvalid={formik.touched.email && formik.errors.email}
               />
               <Form.Control.Feedback type="invalid">
-                {emailError}
+                {formik.errors.email}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="password">
               <Form.Label>Password:</Form.Label>
               <Form.Control
                 type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                {...formik.getFieldProps("password")}
                 placeholder="Enter your password"
-                isInvalid={passwordError}
+                isInvalid={formik.touched.password && formik.errors.password}
               />
               <Form.Control.Feedback type="invalid">
-                {passwordError}
+                {formik.errors.password}
               </Form.Control.Feedback>
             </Form.Group>
-            <div className="buttton"> <Button variant="primary" type="submit">
-              Ekle
-            </Button></div>
-           
+            <div className="buttton">
+              <Button variant="primary" type="submit">
+                Ekle
+              </Button>
+            </div>
           </Form>
-
-
           {users.length > 0 && (
             <div className="user-tablosu">
               <h2>Users:</h2>
@@ -127,5 +109,4 @@ const FormPage = () => {
     </>
   );
 };
-
 export default FormPage;
